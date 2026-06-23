@@ -24,5 +24,7 @@ jobs:
         pip install pytest pytest-cov pandas python-dotenv
 
     - name: Run tests with coverage
+      env:
+        PYTHONPATH: .
       run: |
         pytest tests/test_operations.py tests/test_calculations.py tests/test_input_validators.py tests/test_history.py tests/test_calculator_memento.py tests/test_calculator_config.py tests/test_exceptions.py --cov=app --cov-fail-under=90
