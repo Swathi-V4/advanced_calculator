@@ -1,26 +1,24 @@
-import json
+import os
+from dotenv import load_dotenv
+
 from app.exceptions import ConfigurationError
 
 
 class CalculatorConfig:
+    """Loads and validates application configuration."""
+
     def __init__(self):
-        self.settings = {
-            "precision": 2
-        }
+        load_dotenv()
 
-    def get(self, key):
-        return self.settings.get(key)
+        self.history_file = os.getenv(
+            "HISTORY_FILE",
+            "calculator_history.csv"
+        )
 
-    def set(self, key, value):
-        self.settings[key] = value
+        self.validate()
 
-    def save(self, filename):
-        with open(filename, "w") as f:
-            json.dump(self.settings, f)
-
-    def load(self, filename):
-        try:
-            with open(filename, "r") as f:
-                self.settings = json.load(f)
-        except Exception as e:
-            raise ConfigurationError(str(e))
+    def validate(self):
+        if not self.history_file:
+            raise ConfigurationError(
+                "HISTORY_FILE cannot be empty."
+            )
