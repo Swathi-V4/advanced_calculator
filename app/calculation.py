@@ -1,4 +1,5 @@
 from app.operations import OperationFactory
+from app.history import HistoryManager
 
 
 class Calculation:
@@ -16,9 +17,56 @@ class Calculation:
         return self.result
 
 
+class CalculationObserver:
+    """Base observer for calculation events."""
+
+    def update(self, calculation):
+        pass  # pragma: no cover
+
+
+class LoggingObserver(CalculationObserver):
+    """Observer that stores calculation log messages."""
+
+    def __init__(self):
+        self.logs = []
+
+    def update(self, calculation):
+        self.logs.append(
+            f"{calculation.operation_name}: {calculation.a}, {calculation.b} = {calculation.result}"
+        )
+
+
+class AutoSaveObserver(CalculationObserver):
+    """Observer that automatically adds calculations to history."""
+
+    def __init__(self, history_manager):
+        self.history_manager = history_manager
+
+    def update(self, calculation):
+        self.history_manager.add_record(
+            calculation.operation_name,
+            calculation.a,
+            calculation.b,
+            calculation.result,
+        )
+
+
 class Calculator:
     """Facade class that simplifies calculator operations."""
 
+    def __init__(self):
+        self.history = HistoryManager()
+        self.observers = []
+
+    def add_observer(self, observer):
+        self.observers.append(observer)
+
+    def notify_observers(self, calculation):
+        for observer in self.observers:
+            observer.update(calculation)
+
     def calculate(self, operation_name, a, b):
         calculation = Calculation(operation_name, a, b)
-        return calculation.execute()
+        calculation.execute()
+        self.notify_observers(calculation)
+        return calculation.result
