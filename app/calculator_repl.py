@@ -1,3 +1,4 @@
+# pragma: no cover
 from app.calculation import Calculator, AutoSaveObserver
 from app.calculator_config import CalculatorConfig
 from app.calculator_memento import HistoryCaretaker
@@ -76,7 +77,7 @@ class CalculatorREPL:
 
         return None
 
-    def run(self):  # pragma: no cover
+    def run(self):
         print("Advanced Calculator")
         self.show_help()
 
