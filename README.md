@@ -191,5 +191,3 @@ Every push to the repository is automatically tested.
 ## Author
 
 Swathi Veerapalli
-
-NJIT – IS 601
