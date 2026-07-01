@@ -23,12 +23,27 @@ class CalculatorREPL:
         )
 
     def show_help(self):
-        print(Fore.CYAN + "Commands: help, history, clear, undo, redo, save, load, exit")
-        print(
-            Fore.CYAN
-            + "Operations: add, subtract, multiply, divide, power, root, "
-            "modulus, int_divide, percent, abs_diff"
-        )
+        print(Fore.CYAN + "Available Commands:")
+        print("  help      - Show this help menu")
+        print("  history   - Display calculation history")
+        print("  clear     - Clear history")
+        print("  undo      - Undo last calculation")
+        print("  redo      - Redo last calculation")
+        print("  save      - Save history")
+        print("  load      - Load history")
+        print("  exit      - Exit calculator")
+
+        print(Fore.YELLOW + "\nAvailable Operations:")
+        print("  add")
+        print("  subtract")
+        print("  multiply")
+        print("  divide")
+        print("  power")
+        print("  root")
+        print("  modulus")
+        print("  int_divide")
+        print("  percent")
+        print("  abs_diff")
 
     def show_history(self):
         print(self.calculator.history.get_history())
@@ -61,40 +76,49 @@ class CalculatorREPL:
         if command == "help":
             self.show_help()
             return True
+
         if command == "history":
             self.show_history()
             return True
+
         if command == "clear":
             self.clear_history()
             return True
+
         if command == "save":
             self.save_history()
             return True
+
         if command == "load":
             self.load_history()
             return True
+
         if command == "undo":
             self.undo()
             return True
+
         if command == "redo":
             self.redo()
             return True
+
         if command == "exit":
-            print(Fore.MAGENTA + "Goodbye!")
+            print(Fore.CYAN + "Goodbye!")
             return False
 
         return None
 
     def run(self):
-        print(Fore.BLUE + Style.BRIGHT + "Advanced Calculator")
+        print(Fore.CYAN + "Advanced Calculator")
         self.show_help()
 
         while True:
-            operation = input("Operation or command: ")
+            operation = input("\nOperation or command: ")
+
             command_result = self.process_command(operation)
 
             if command_result is False:
                 break
+
             if command_result is True:
                 continue
 
@@ -103,6 +127,7 @@ class CalculatorREPL:
                 b = validate_number(input("Second number: "))
 
                 result = self.calculator.calculate(operation, a, b)
+
                 self.caretaker.save(result)
                 self.last_result = result
 
@@ -110,3 +135,7 @@ class CalculatorREPL:
 
             except Exception as error:
                 print(Fore.RED + f"Error: {error}")
+
+
+if __name__ == "__main__":
+    CalculatorREPL().run()

@@ -5,3 +5,6 @@ __pycache__/
 .coverage
 .env
 .DS_Store
+calculator.log
+history.csv
+calculator_history.csv
