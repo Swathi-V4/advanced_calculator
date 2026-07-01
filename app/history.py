@@ -1,10 +1,11 @@
 import pandas as pd
+from datetime import datetime
 
 
 class HistoryManager:
     def __init__(self):
         self.history = pd.DataFrame(
-            columns=["operation", "a", "b", "result"]
+            columns=["operation", "a", "b", "result", "timestamp"]
         )
 
     def add_record(self, operation, a, b, result):
@@ -13,11 +14,12 @@ class HistoryManager:
             a,
             b,
             result,
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         ]
 
     def clear(self):
         self.history = pd.DataFrame(
-            columns=["operation", "a", "b", "result"]
+            columns=["operation", "a", "b", "result", "timestamp"]
         )
 
     def save(self, filename="history.csv"):

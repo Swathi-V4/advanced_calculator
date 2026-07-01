@@ -1,5 +1,6 @@
 from app.operations import OperationFactory
 from app.history import HistoryManager
+from app.logger import setup_logger
 
 
 class Calculation:
@@ -25,19 +26,23 @@ class CalculationObserver:
 
 
 class LoggingObserver(CalculationObserver):
-    """Observer that stores calculation log messages."""
+    """Observer that logs calculations to a file and stores them in memory."""
 
     def __init__(self):
         self.logs = []
+        self.logger = setup_logger()
 
     def update(self, calculation):
-        self.logs.append(
-            f"{calculation.operation_name}: {calculation.a}, {calculation.b} = {calculation.result}"
+        message = (
+            f"{calculation.operation_name}: "
+            f"{calculation.a}, {calculation.b} = {calculation.result}"
         )
+        self.logs.append(message)
+        self.logger.info(message)
 
 
 class AutoSaveObserver(CalculationObserver):
-    """Observer that automatically adds calculations to history."""
+    """Observer that automatically saves calculations to history."""
 
     def __init__(self, history_manager):
         self.history_manager = history_manager
@@ -57,6 +62,9 @@ class Calculator:
     def __init__(self):
         self.history = HistoryManager()
         self.observers = []
+
+        # Register the logging observer automatically
+        self.add_observer(LoggingObserver())
 
     def add_observer(self, observer):
         self.observers.append(observer)
